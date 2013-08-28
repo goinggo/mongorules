@@ -1,0 +1,4 @@
+use <database>
+db.createCollection("buoy_stations")
+db.buoy_stations.ensureIndex({ "station_id" : 1 },{ "unique" : true })
+db.buoy_stations.ensureIndex({ "location" : "2dsphere" })

@@ -1,0 +1,96 @@
+db.buoy_stations.aggregate(
+{"$geoNear": { "near": [-82.448487,27.995614], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
+{"$project" : { "station_id" : "$station_id", "wind_speed" : "$condition.wind_speed_milehour", "_id" : 0  }})
+{
+	"result" : [
+		{
+			"station_id" : "cwbf1",
+			"wind_speed" : 9.171453786668778
+		},
+		{
+			"station_id" : "fhpf1",
+			"wind_speed" : 14.98749757333756
+		},
+		{
+			"station_id" : "camf1",
+			"wind_speed" : 3.35541
+		},
+		{
+			"station_id" : "optf1",
+			"wind_speed" : 8.052983786668777
+		},
+		{
+			"station_id" : "sapf1",
+			"wind_speed" : 8.052983786668777
+		},
+		{
+			"station_id" : "sblf1",
+			"wind_speed" : 4.697573786668777
+		},
+		{
+			"station_id" : "tpaf1",
+			"wind_speed" : 2.23694
+		},
+		{
+			"station_id" : "tshf1",
+			"wind_speed" : 3.35541
+		},
+		{
+			"station_id" : "egkf1",
+			"wind_speed" : 12.75055757333756
+		}
+	],
+	"ok" : 1
+}
+
+
+db.buoy_stations.aggregate(
+{"$geoNear": { "near": [-82.448487,27.995614], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
+{"$project" : { "station_id" : "$station_id", "wind_speed" : "$condition.wind_speed_milehour", "_id" : 0  }},
+{"$group" : { "_id" : 1, "total_stations" : {"$sum" : 1}, "average_wind_speed" : {"$avg" : "$wind_speed"}}}
+)
+{
+	"result" : [
+		{
+			"_id" : 1,
+			"total_stations" : 9,
+			"average_wind_speed" : 7.406756699261136
+		}
+	],
+	"ok" : 1
+}
+
+
+db.buoy_stations.aggregate(
+{"$geoNear": { "near": [-82.448487,27.995614], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
+{"$project" : { "station_id" : "$station_id", "gust_wind_speed" : "$condition.gust_wind_speed_milehour", "distance" : "$distance", "_id" : 0  }},
+{"$sort" : { "gust_wind_speed" : 1 }},
+{"$limit" : 1 }
+)
+{
+	"result" : [
+		{
+			"station_id" : "tpaf1",
+			"distance" : 22.363651652604574,
+			"gust_wind_speed" : 4.697573786668777
+		}
+	],
+	"ok" : 1
+}
+
+
+db.buoy_stations.aggregate(
+{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
+{"$project" : { "station_id" : "$station_id", "distance" : "$distance", "_id" : 0  }},
+{"$sort" : { "distance" : 1 }},
+{"$limit" : 1 }
+)
+{
+	"result" : [
+		{
+			"station_id" : "cwbf1",
+			"distance" : 2.962600439516612
+		}
+	],
+	"ok" : 1
+}
