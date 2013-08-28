@@ -5,7 +5,7 @@
 package main
 
 import (
-	"github.com/goinggo/mongoRules/engine"
+	"github.com/goinggo/mongorules/engine"
 )
 
 func main() {

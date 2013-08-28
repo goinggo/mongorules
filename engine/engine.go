@@ -6,7 +6,7 @@ package engine
 
 import (
 	"fmt"
-	"github.com/goinggo/mongoRules/rules"
+	"github.com/goinggo/mongorules/rules"
 	"labix.org/v2/mgo"
 	"time"
 )

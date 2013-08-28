@@ -6,7 +6,7 @@ package rules
 
 import (
 	"fmt"
-	"github.com/goinggo/mongoRules/data"
+	"github.com/goinggo/mongorules/data"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 )
