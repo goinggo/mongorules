@@ -13,3 +13,11 @@ bill@ardanstudios.com
 GoingGo.net Post:  
 http://www.goinggo.net/2013/07/analyze-data-with-mongodb-and-go.html
 
+	-- Get, build and install the code
+	export GOPATH=$HOME/goinggo
+	go get github.com/goinggo/mongorules
+	
+	-- Run the code
+	cd $GOPATH/bin
+	./mongorules
+

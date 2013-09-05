@@ -8,9 +8,9 @@
 	and analyzes certain buoy stations to determine if we should go finishing in Tampa, FL. The
 	analysis is very basic but it will give you an idea of how I use Mongo to analyze data and build rules.
 
-	Ardan Studios<br />
-	12973 SW 112 ST, Suite 153<br />
-	Miami, FL 33186<br />
+	Ardan Studios
+	12973 SW 112 ST, Suite 153
+	Miami, FL 33186
 	bill@ardanstudios.com
 
 	GoingGo.net Post:
