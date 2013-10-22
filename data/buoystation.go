@@ -41,7 +41,6 @@ type BuoyStation struct {
 //  stationId: The station id to display
 //  collection: The collection to find the buoy station
 func GetBuoyStation(stationId string, collection *mgo.Collection) (buoyStation *BuoyStation, err error) {
-
 	// Find all the buoys
 	query := collection.Find(bson.M{"station_id": stationId})
 

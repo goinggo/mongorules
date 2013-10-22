@@ -33,7 +33,6 @@ type Tampa struct {
 
 // NewTampaRule creates the new rule
 func NewTampaRule(collection *mgo.Collection) (tampa *Tampa) {
-
 	// https://maps.google.com/maps?q=27.945886,-82.798676&z=10
 
 	// We are going to look at buoys within a 30 mile radius
@@ -56,19 +55,16 @@ func NewTampaRule(collection *mgo.Collection) (tampa *Tampa) {
 
 // Run executes the tampa rule
 func (this *Tampa) Run() {
-
 	// Calculate the average wind speed for all buoys in the Tampa area
 	avgWindSpeed, err := this._CalculateAverageWindSpeed()
 
 	if err != nil {
-
 		fmt.Printf("\nERROR : %s\n\n", err)
 		return
 	}
 
 	// Check the average windspeed is within range
 	if avgWindSpeed > this.MaxAvgWindSpeed {
-
 		fmt.Printf("\n*** Stay Home, Tampa Is Not Good : Average Wind Speed Is %.2f ***\n\n", avgWindSpeed)
 		return
 	}
@@ -77,7 +73,6 @@ func (this *Tampa) Run() {
 	buoyStationWindGust, err := this._FindLowestWindGust()
 
 	if err != nil {
-
 		fmt.Printf("\nERROR : %s\n\n", err)
 		return
 	}
@@ -86,7 +81,6 @@ func (this *Tampa) Run() {
 	buoyStationDistance, err := this._FindClosestBuoy()
 
 	if err != nil {
-
 		fmt.Printf("\nERROR : %s\n\n", err)
 		return
 	}
@@ -103,7 +97,6 @@ func (this *Tampa) Run() {
 
 // Checks the average wind speed against all buoys in Tampa
 func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error) {
-
 	/*
 		db.buoy_stations.aggregate(
 		{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
@@ -151,7 +144,6 @@ func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error
 	err = pipe.All(&results)
 
 	if err != nil {
-
 		return 0, err
 	}
 
@@ -163,7 +155,6 @@ func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error
 
 // _FindLowestWindGust finds the tampa buoy with the lowest wind gust
 func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err error) {
-
 	/*
 		db.buoy_stations.aggregate(
 		{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
@@ -213,7 +204,6 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 	err = pipe.All(&results)
 
 	if err != nil {
-
 		return nil, err
 	}
 
@@ -224,7 +214,6 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 	buoyStation, err = data.GetBuoyStation(stationId, this.Collection)
 
 	if err != nil {
-
 		return nil, err
 	}
 
@@ -236,7 +225,6 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 
 // _FindClosestBuoy finds the tampa buoy closest to the current location
 func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error) {
-
 	/*
 		db.buoy_stations.aggregate(
 		{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
@@ -296,7 +284,6 @@ func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error)
 	buoyStation, err = data.GetBuoyStation(stationId, this.Collection)
 
 	if err != nil {
-
 		return nil, err
 	}
 
@@ -310,7 +297,6 @@ func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error)
 //  stationId: The station id to display
 //  avgWindSpeed: The average wind speed
 func (this *Tampa) _DisplayResults(title string, buoyStation *data.BuoyStation, extraFields map[string]string) {
-
 	fmt.Printf("\n%s\n", title)
 	fmt.Printf("Station Id\t\t\t: %s\n", buoyStation.StationId)
 	fmt.Printf("Name\t\t\t: %s\n", buoyStation.Name)
@@ -323,7 +309,6 @@ func (this *Tampa) _DisplayResults(title string, buoyStation *data.BuoyStation, 
 	fmt.Printf("Wind Gust\t\t\t: %.2f Miles/Hour\n", buoyStation.Condition.WindGust)
 
 	for field, value := range extraFields {
-
 		fmt.Printf("%s\t\t: %s\n", field, value)
 	}
 }

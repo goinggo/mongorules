@@ -31,7 +31,6 @@ type Rule interface {
 
 // RunRule will run the specified rule and display the outcome
 func RunRule(ruleName string) {
-
 	// Create MongoDB connectivity parameters
 	dialInfo := &mgo.DialInfo{
 		Addrs:    []string{MONGODB_HOST},
@@ -45,14 +44,12 @@ func RunRule(ruleName string) {
 	// Only do this once in your application. There is a lot of overhead with this call.
 	session, err := mgo.DialWithInfo(dialInfo)
 	if err != nil {
-
 		fmt.Printf("ERROR : %s", err)
 		return
 	}
 
 	// Close the session when we are done
 	defer func() {
-
 		// Close the session to Mongo
 		session.Close()
 	}()
@@ -67,12 +64,10 @@ func RunRule(ruleName string) {
 	switch ruleName {
 
 	case "tampa":
-
 		rule = rules.NewTampaRule(collection)
 		break
 
 	default:
-
 		fmt.Printf("Unknown Rules\n")
 		return
 	}

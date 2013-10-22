@@ -23,7 +23,6 @@ import (
 )
 
 func main() {
-
 	// Run the specified rule
 	engine.RunRule("tampa")
 }
