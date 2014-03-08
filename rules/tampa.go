@@ -1,5 +1,5 @@
 // Copyright 2013 Ardan Studios. All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use of tampa source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package rules
@@ -54,9 +54,9 @@ func NewTampaRule(collection *mgo.Collection) (tampa *Tampa) {
 //** PUBLIC MEMBER FUNCTIONS
 
 // Run executes the tampa rule
-func (this *Tampa) Run() {
+func (tampa *Tampa) Run() {
 	// Calculate the average wind speed for all buoys in the Tampa area
-	avgWindSpeed, err := this._CalculateAverageWindSpeed()
+	avgWindSpeed, err := tampa._CalculateAverageWindSpeed()
 
 	if err != nil {
 		fmt.Printf("\nERROR : %s\n\n", err)
@@ -64,13 +64,13 @@ func (this *Tampa) Run() {
 	}
 
 	// Check the average windspeed is within range
-	if avgWindSpeed > this.MaxAvgWindSpeed {
+	if avgWindSpeed > tampa.MaxAvgWindSpeed {
 		fmt.Printf("\n*** Stay Home, Tampa Is Not Good : Average Wind Speed Is %.2f ***\n\n", avgWindSpeed)
 		return
 	}
 
 	// Find the the buoy with the current lowest wind gust
-	buoyStationWindGust, err := this._FindLowestWindGust()
+	buoyStationWindGust, err := tampa._FindLowestWindGust()
 
 	if err != nil {
 		fmt.Printf("\nERROR : %s\n\n", err)
@@ -78,7 +78,7 @@ func (this *Tampa) Run() {
 	}
 
 	// Find the buoy closest to our current location
-	buoyStationDistance, err := this._FindClosestBuoy()
+	buoyStationDistance, err := tampa._FindClosestBuoy()
 
 	if err != nil {
 		fmt.Printf("\nERROR : %s\n\n", err)
@@ -89,14 +89,14 @@ func (this *Tampa) Run() {
 	extraFields := make(map[string]string)
 	extraFields["Avg Wind Gust"] = fmt.Sprintf("%.2f Miles Per Hour", avgWindSpeed)
 
-	this._DisplayResults("Tampa Buoy With Lowest Wind Gust", buoyStationWindGust, extraFields)
-	this._DisplayResults("Tampa Buoy Closest To Your Location", buoyStationDistance, extraFields)
+	tampa._DisplayResults("Tampa Buoy With Lowest Wind Gust", buoyStationWindGust, extraFields)
+	tampa._DisplayResults("Tampa Buoy Closest To Your Location", buoyStationDistance, extraFields)
 }
 
 //** PRIVATE MEMBER FUNCTIONS
 
 // Checks the average wind speed against all buoys in Tampa
-func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error) {
+func (tampa *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error) {
 	/*
 		db.buoy_stations.aggregate(
 		{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
@@ -107,12 +107,12 @@ func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error
 
 	operation1 := bson.M{
 		"$geoNear": bson.M{
-			"near": []float64{this.Longitude, this.Latitude},
+			"near": []float64{tampa.Longitude, tampa.Latitude},
 			"query": bson.M{
 				"condition.wind_speed_milehour": bson.M{"$ne": nil},
 			},
 			"distanceField":      "distance",
-			"maxDistance":        this.MaxDistance,
+			"maxDistance":        tampa.MaxDistance,
 			"spherical":          true,
 			"distanceMultiplier": DISTANCE_MULTIPLIER,
 		},
@@ -137,7 +137,7 @@ func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error
 	operations := []bson.M{operation1, operation2, operation3}
 
 	// Prepare the query to run in the MongoDB aggregation pipeline
-	pipe := this.Collection.Pipe(operations)
+	pipe := tampa.Collection.Pipe(operations)
 
 	// Run the queries and capture the results
 	results := []bson.M{}
@@ -154,7 +154,7 @@ func (this *Tampa) _CalculateAverageWindSpeed() (avgWindSpeed float64, err error
 }
 
 // _FindLowestWindGust finds the tampa buoy with the lowest wind gust
-func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err error) {
+func (tampa *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err error) {
 	/*
 		db.buoy_stations.aggregate(
 		{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
@@ -166,12 +166,12 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 
 	operation1 := bson.M{
 		"$geoNear": bson.M{
-			"near": []float64{this.Longitude, this.Latitude},
+			"near": []float64{tampa.Longitude, tampa.Latitude},
 			"query": bson.M{
 				"condition.wind_speed_milehour": bson.M{"$ne": nil},
 			},
 			"distanceField":      "distance",
-			"maxDistance":        this.MaxDistance,
+			"maxDistance":        tampa.MaxDistance,
 			"spherical":          true,
 			"distanceMultiplier": DISTANCE_MULTIPLIER,
 		},
@@ -197,7 +197,7 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 	operations := []bson.M{operation1, operation2, operation3, operation4}
 
 	// Prepare the operations to run in the MongoDB aggregation pipeline
-	pipe := this.Collection.Pipe(operations)
+	pipe := tampa.Collection.Pipe(operations)
 
 	// Run the operations and capture the results
 	results := []bson.M{}
@@ -211,7 +211,7 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 	distance := results[0]["distance"].(float64)
 
 	// Capture the buoy station
-	buoyStation, err = data.GetBuoyStation(stationId, this.Collection)
+	buoyStation, err = data.GetBuoyStation(stationId, tampa.Collection)
 
 	if err != nil {
 		return nil, err
@@ -224,7 +224,7 @@ func (this *Tampa) _FindLowestWindGust() (buoyStation *data.BuoyStation, err err
 }
 
 // _FindClosestBuoy finds the tampa buoy closest to the current location
-func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error) {
+func (tampa *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error) {
 	/*
 		db.buoy_stations.aggregate(
 		{"$geoNear": { "near": [-82.798676,27.945886], "query": {"condition.wind_speed_milehour" : {"$ne" : null}}, "distanceField": "distance", "maxDistance": 0.00756965597428, "spherical": true, "distanceMultiplier": 3963.192 }},
@@ -236,12 +236,12 @@ func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error)
 
 	operation1 := bson.M{
 		"$geoNear": bson.M{
-			"near": []float64{this.Longitude, this.Latitude},
+			"near": []float64{tampa.Longitude, tampa.Latitude},
 			"query": bson.M{
 				"condition.wind_speed_milehour": bson.M{"$ne": nil},
 			},
 			"distanceField":      "distance",
-			"maxDistance":        this.MaxDistance,
+			"maxDistance":        tampa.MaxDistance,
 			"spherical":          true,
 			"distanceMultiplier": DISTANCE_MULTIPLIER,
 		},
@@ -266,7 +266,7 @@ func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error)
 	operations := []bson.M{operation1, operation2, operation3, operation4}
 
 	// Prepare the operations to run in the MongoDB aggregation pipeline
-	pipe := this.Collection.Pipe(operations)
+	pipe := tampa.Collection.Pipe(operations)
 
 	// Run the operations and capture the results
 	results := []bson.M{}
@@ -281,7 +281,7 @@ func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error)
 	distance := results[0]["distance"].(float64)
 
 	// Capture the buoy station
-	buoyStation, err = data.GetBuoyStation(stationId, this.Collection)
+	buoyStation, err = data.GetBuoyStation(stationId, tampa.Collection)
 
 	if err != nil {
 		return nil, err
@@ -296,7 +296,7 @@ func (this *Tampa) _FindClosestBuoy() (buoyStation *data.BuoyStation, err error)
 // _DisplayResults provides the final information for a successful result
 //  stationId: The station id to display
 //  avgWindSpeed: The average wind speed
-func (this *Tampa) _DisplayResults(title string, buoyStation *data.BuoyStation, extraFields map[string]string) {
+func (tampa *Tampa) _DisplayResults(title string, buoyStation *data.BuoyStation, extraFields map[string]string) {
 	fmt.Printf("\n%s\n", title)
 	fmt.Printf("Station Id\t\t\t: %s\n", buoyStation.StationId)
 	fmt.Printf("Name\t\t\t: %s\n", buoyStation.Name)
