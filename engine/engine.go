@@ -7,9 +7,10 @@ package engine
 
 import (
 	"fmt"
-	"github.com/goinggo/mongorules/rules"
-	"labix.org/v2/mgo"
 	"time"
+
+	"github.com/goinggo/mongorules/rules"
+	"gopkg.in/mgo.v2"
 )
 
 const (
